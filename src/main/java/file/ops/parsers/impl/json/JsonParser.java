@@ -6,6 +6,7 @@ import file.ops.parsers.impl.json.strategy.IParse;
 import file.ops.parsers.impl.json.strategy.ParseStrategyFactory;
 import pojo.JobAverage;
 
+import java.io.File;
 import java.util.HashSet;
 
 public class JsonParser extends AbstractParser {
@@ -15,13 +16,13 @@ public class JsonParser extends AbstractParser {
         super();
     }
 
-    public JsonParser(String fileName) {
-        super(fileName);
+    public JsonParser(File file) {
+        super(file);
         this.parseImplementation = ParseStrategyFactory.getParseStrategyImplementation(ParseStrategyFactory.getRandomParseStrategyType());
     }
 
     @Override
     public HashSet<JobAverage> parseImpl() throws ParserImplementationException {
-        return parseImplementation.parse(super.getFileName());
+        return parseImplementation.parse(super.getFile());
     }
 }

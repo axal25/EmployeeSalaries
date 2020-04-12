@@ -3,6 +3,7 @@ package file.ops;
 import file.ops.exceptions.*;
 import lombok.Getter;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
@@ -16,8 +17,8 @@ public class DoubleScanner implements AutoCloseable {
     private boolean isClosed = true;
     private Pattern delimiter = null;
 
-    public DoubleScanner(String fileName) throws BadFileNameException, InputStreamNotOpenException, IOException {
-        this.inputStream = InputStreamOps.getNewInputStream(fileName);
+    public DoubleScanner(File file) throws BadFileNameException, InputStreamNotOpenException {
+        this.inputStream = InputStreamOps.getNewInputStream(file);
         this.inputStreamScanner = new Scanner(this.inputStream);
         this.isClosed = false;
         this.delimiter = inputStreamScanner.delimiter();

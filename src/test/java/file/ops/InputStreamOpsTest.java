@@ -13,30 +13,34 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class InputStreamOpsTest {
 
-    public static final String[] EXISTING_CSV_RESOURCE_RELATIVE_PATHS = Main.EXISTING_CSV_RESOURCE_RELATIVE_PATHS;
-    public static final String[] EXISTING_JSON_RESOURCE_RELATIVE_PATHS = Main.EXISTING_JSON_RESOURCE_RELATIVE_PATHS;
-    public static final String[] NOT_EXISTING_RESOURCE_RELATIVE_PATHS = {
-            new StringBuilder().append(File.separator).append("csv").append(File.separator).append("employeesNotExisting.csv").toString(),
-            new StringBuilder().append(File.separator).append("json").append(File.separator).append("employeesNotExisting.json").toString(),
-            new StringBuilder().append(File.separator).append("csv").append(File.separator).append("employees with spaces Not Existing.csv").toString(),
-            new StringBuilder().append(File.separator).append("json").append(File.separator).append("employees with spaces Not Existing.json").toString(),
-            new StringBuilder().append(File.separator).append("test directory with spaces Not Existing").append(File.separator).append("employees.csv").toString(),
-            new StringBuilder().append(File.separator).append("test directory with spaces Not Existing").append(File.separator).append("employees.json").toString(),
-            new StringBuilder().append(File.separator).append("test directory with spaces Not Existing").append(File.separator).append("employees with spaces.csv").toString(),
-            new StringBuilder().append(File.separator).append("test directory with spaces Not Existing").append(File.separator).append("employees with spaces.json").toString(),
+    public static final File EXISTING_CSV_RESOURCE_DIRECTORY_RELATIVE_PATHS = Main.EXISTING_CSV_RESOURCE_DIRECTORY_RELATIVE_PATHS;
+    public static final File EXISTING_JSON_RESOURCE_DIRECTORY_RELATIVE_PATHS = Main.EXISTING_JSON_RESOURCE_DIRECTORY_RELATIVE_PATHS;
+    public static final File EXISTING_TEST_RESOURCE_DIRECTORY_RELATIVE_PATHS = new File("test directory with spaces Not Existing");
+
+    public static final File[] EXISTING_CSV_RESOURCE_RELATIVE_PATHS = Main.EXISTING_CSV_RESOURCE_RELATIVE_PATHS;
+    public static final File[] EXISTING_JSON_RESOURCE_RELATIVE_PATHS = Main.EXISTING_JSON_RESOURCE_RELATIVE_PATHS;
+    public static final File[] NOT_EXISTING_RESOURCE_RELATIVE_PATHS = {
+            new File(EXISTING_CSV_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employeesNotExisting.csv"),
+            new File(EXISTING_JSON_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employeesNotExisting.json"),
+            new File(EXISTING_CSV_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees with spaces Not Existing.csv"),
+            new File(EXISTING_JSON_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees with spaces Not Existing.json"),
+            new File(EXISTING_TEST_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees.csv"),
+            new File(EXISTING_TEST_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees.json"),
+            new File(EXISTING_TEST_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees with spaces.csv"),
+            new File(EXISTING_TEST_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees with spaces.json"),
     };
-    public static final String[] BAD_RESOURCE_RELATIVE_PATHS = MainTest.BAD_RESOURCE_RELATIVE_PATHS;
+    public static final File[] BAD_RESOURCE_RELATIVE_PATHS = MainTest.BAD_RESOURCE_RELATIVE_PATHS;
 
     @Test
     @Order(1)
     @DisplayName("getNewInputStream - EXISTING_CSV / JSON_RESOURCE_RELATIVE_PATHS")
     void getNewInputStream_EXISTING_RESOURCE_RELATIVE_PATHS() throws BadFileNameException, IOException, InputStreamNotOpenException {
-        for (String existingResourceRelativePath : EXISTING_CSV_RESOURCE_RELATIVE_PATHS) {
+        for (File existingResourceRelativePath : EXISTING_CSV_RESOURCE_RELATIVE_PATHS) {
             InputStream inputStream = InputStreamOps.getNewInputStream(existingResourceRelativePath);
             assertNotNull(inputStream);
             inputStream.close();
         }
-        for (String existingResourceRelativePath : EXISTING_JSON_RESOURCE_RELATIVE_PATHS) {
+        for (File existingResourceRelativePath : EXISTING_JSON_RESOURCE_RELATIVE_PATHS) {
             InputStream inputStream = InputStreamOps.getNewInputStream(existingResourceRelativePath);
             assertNotNull(inputStream);
             inputStream.close();
@@ -47,8 +51,8 @@ public class InputStreamOpsTest {
     @Order(2)
     @DisplayName("getNewInputStream - BAD_RESOURCE_RELATIVE_PATHS")
     void getNewInputStream_BAD_RESOURCE_RELATIVE_PATHS() {
-        for (String badResourceRelativePath : BAD_RESOURCE_RELATIVE_PATHS) {
-            final String finalExistingResourceRelativePath = badResourceRelativePath;
+        for (File badResourceRelativePath : BAD_RESOURCE_RELATIVE_PATHS) {
+            final File finalExistingResourceRelativePath = badResourceRelativePath;
             assertThrows(
                     BadFileNameException.class,
                     () -> InputStreamOps.getNewInputStream(finalExistingResourceRelativePath)
@@ -60,8 +64,8 @@ public class InputStreamOpsTest {
     @Order(3)
     @DisplayName("getNewInputStream - NOT_EXISTING_RESOURCE_RELATIVE_PATHS")
     void getNewInputStream_NOT_EXISTING_RESOURCE_RELATIVE_PATHS() {
-        for (String notExistingResourceRelativePath : NOT_EXISTING_RESOURCE_RELATIVE_PATHS) {
-            final String finalExistingResourceRelativePath = notExistingResourceRelativePath;
+        for (File notExistingResourceRelativePath : NOT_EXISTING_RESOURCE_RELATIVE_PATHS) {
+            final File finalExistingResourceRelativePath = notExistingResourceRelativePath;
             assertThrows(
                     InputStreamNotOpenException.class,
                     () -> InputStreamOps.getNewInputStream(finalExistingResourceRelativePath)

@@ -1,6 +1,5 @@
 package file.ops.parsers.impl.json.strategy;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import file.ops.InputStreamOps;
 import file.ops.exceptions.*;
@@ -8,6 +7,7 @@ import file.ops.parsers.impl.exceptions.ParserImplementationException;
 import pojo.Employee;
 import pojo.JobAverage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -16,13 +16,13 @@ public class ParseStrategyEmployeeOneByOne implements IParse {
     public static final String EMPLOYEES_ARRAY_FIELD_NAME = "employees";
 
     @Override
-    public HashSet<JobAverage> parse(String fileName) throws ParserImplementationException {
-        return employeesParsing(fileName);
+    public HashSet<JobAverage> parse(File file) throws ParserImplementationException {
+        return employeesParsing(file);
     }
 
-    private HashSet<JobAverage> employeesParsing(String fileName) throws ParserImplementationException {
+    private HashSet<JobAverage> employeesParsing(File file) throws ParserImplementationException {
         final String functionName = "actualParsing(String contentsOfEmployeesArray, String fileName)";
-        try(Scanner scanner = new Scanner(InputStreamOps.getNewInputStream(fileName))) {
+        try(Scanner scanner = new Scanner(InputStreamOps.getNewInputStream(file))) {
             scanner.useDelimiter("(?<=\\})[\\s\n\r]*,[\\s\n\r]*(?=\\{)");
             HashSet<JobAverage> jobAverages = new HashSet<>();
             ObjectMapper objectMapper = new ObjectMapper();
@@ -39,7 +39,7 @@ public class ParseStrategyEmployeeOneByOne implements IParse {
             }
             return jobAverages;
         } catch (InputStreamNotOpenException | IOException | BadFileNameException e) {
-            throw new ParserImplementationException(this.getClass().getSimpleName(), functionName, fileName, e);
+            throw new ParserImplementationException(this.getClass().getSimpleName(), functionName, file.getPath(), e);
         }
     }
 

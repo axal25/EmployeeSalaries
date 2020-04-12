@@ -1,16 +1,17 @@
 package file.ops.parsers;
 
-import file.ops.InputStreamOps;
 import file.ops.exceptions.BadFileNameException;
 import file.ops.parsers.exeptions.BadFileExtensionException;
+
+import java.io.File;
 
 public class FileParserFactory {
     public static final String CSV_EXTENSION = "csv";
     public static final String JSON_EXTENSION = "json";
 
-    public static FileParser getFileParser(String fileName) throws BadFileExtensionException, BadFileNameException {
+    public static FileParser getFileParser(File file) throws BadFileExtensionException, BadFileNameException {
         final String functionName = "getExtension(String fileName)";
-        final String fileExtension = getFileExtension(fileName);
+        final String fileExtension = getFileExtension(file.getPath());
         try {
             switch (fileExtension) {
                 case CSV_EXTENSION:
@@ -21,7 +22,7 @@ public class FileParserFactory {
                     throw new UnsupportedOperationException(new StringBuilder().append("Unexpected value: ").append(fileExtension).toString());
             }
         } catch(NullPointerException | UnsupportedOperationException e) {
-            throw new BadFileExtensionException(FileParser.class.getSimpleName(), functionName, fileName, fileExtension, e);
+            throw new BadFileExtensionException(FileParser.class.getSimpleName(), functionName, file.getPath(), fileExtension, e);
         }
     }
 

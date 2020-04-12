@@ -7,6 +7,7 @@ import main.Main;
 import org.junit.jupiter.api.*;
 import pojo.JobAverage;
 
+import java.io.File;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,9 +15,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FileParserFactoryTest {
-    public static final String[] EXISTING_CSV_RESOURCE_RELATIVE_PATHS = Main.EXISTING_CSV_RESOURCE_RELATIVE_PATHS;
-    public static final String[] EXISTING_JSON_RESOURCE_RELATIVE_PATHS = Main.EXISTING_JSON_RESOURCE_RELATIVE_PATHS;
-    public static final String[] UNSUPPORTED_EXTENSIONS = {null, "", "txt", ".txt", "bla.txt"};
+    public static final File[] EXISTING_CSV_RESOURCE_RELATIVE_PATHS = Main.EXISTING_CSV_RESOURCE_RELATIVE_PATHS;
+    public static final File[] EXISTING_JSON_RESOURCE_RELATIVE_PATHS = Main.EXISTING_JSON_RESOURCE_RELATIVE_PATHS;
+    public static final File[] UNSUPPORTED_EXTENSIONS = {
+            new File(""),
+            new File("txt"),
+            new File(".txt"),
+            new File("bla.txt")
+    };
     public static final String[][] EXPECTED_JOB_AVERAGES_TO_STRING = {
             {
                 "JobAverage{amountOfEntries=1, job=Job{jobTitle='Priest', salary=PLN 15240}} jobAverage.getAverage(): PLN 15240",
@@ -46,8 +52,8 @@ public class FileParserFactoryTest {
     @Order(1)
     @DisplayName("FileParserFactory Csv Constructor")
     void FileParserFactoryCsvConstructor() throws BadFileExtensionException, BadFileNameException {
-        for (String existingResourceRelativePath : EXISTING_CSV_RESOURCE_RELATIVE_PATHS) {
-            String fileExtension = FileParserFactory.getFileExtension(existingResourceRelativePath);
+        for (File existingResourceRelativePath : EXISTING_CSV_RESOURCE_RELATIVE_PATHS) {
+            String fileExtension = FileParserFactory.getFileExtension(existingResourceRelativePath.getPath());
             assertEquals("csv", fileExtension);
             FileParser fileParser = FileParserFactory.getFileParser(existingResourceRelativePath);
             assertEquals(FileParser.CSV, fileParser);
@@ -58,8 +64,8 @@ public class FileParserFactoryTest {
     @Order(2)
     @DisplayName("FileParserFactory Json Constructor")
     void FileParserFactoryJsonConstructor() throws BadFileExtensionException, BadFileNameException {
-        for (String existingResourceRelativePath : EXISTING_JSON_RESOURCE_RELATIVE_PATHS) {
-            String fileExtension = FileParserFactory.getFileExtension(existingResourceRelativePath);
+        for (File existingResourceRelativePath : EXISTING_JSON_RESOURCE_RELATIVE_PATHS) {
+            String fileExtension = FileParserFactory.getFileExtension(existingResourceRelativePath.getPath());
             assertEquals("json", fileExtension);
             FileParser fileParser = FileParserFactory.getFileParser(existingResourceRelativePath);
             assertEquals(FileParser.JSON, fileParser);
@@ -70,8 +76,8 @@ public class FileParserFactoryTest {
     @Order(3)
     @DisplayName("FileParserFactory Unsupported Constructor")
     void FileParserFactoryUnsupportedConstructor() {
-        for (String unsupportedExtension : UNSUPPORTED_EXTENSIONS) {
-            if(unsupportedExtension == null || unsupportedExtension.isEmpty()) assertThrows(BadFileNameException.class, () -> FileParserFactory.getFileParser(unsupportedExtension));
+        for (File unsupportedExtension : UNSUPPORTED_EXTENSIONS) {
+            if(unsupportedExtension.getPath() == null || unsupportedExtension.getPath().isEmpty()) assertThrows(BadFileNameException.class, () -> FileParserFactory.getFileParser(unsupportedExtension));
             else assertThrows(BadFileExtensionException.class, () -> FileParserFactory.getFileParser(unsupportedExtension));
         }
     }
@@ -80,8 +86,8 @@ public class FileParserFactoryTest {
     @Order(4)
     @DisplayName("FileParserFactory Csv Parse")
     void FileParserFactoryCsvParse() throws BadFileExtensionException, BadFileNameException, ParserImplementationException {
-        for (String existingResourceRelativePath : EXISTING_CSV_RESOURCE_RELATIVE_PATHS) {
-            String fileExtension = FileParserFactory.getFileExtension(existingResourceRelativePath);
+        for (File existingResourceRelativePath : EXISTING_CSV_RESOURCE_RELATIVE_PATHS) {
+            String fileExtension = FileParserFactory.getFileExtension(existingResourceRelativePath.getPath());
             assertEquals("csv", fileExtension);
             FileParser fileParser = FileParserFactory.getFileParser(existingResourceRelativePath);
             assertEquals(FileParser.CSV, fileParser);
@@ -102,8 +108,8 @@ public class FileParserFactoryTest {
     @Order(5)
     @DisplayName("FileParserFactory Json Parse")
     void FileParserFactoryJsonParse() throws BadFileExtensionException, BadFileNameException, ParserImplementationException {
-        for (String existingResourceRelativePath : EXISTING_JSON_RESOURCE_RELATIVE_PATHS) {
-            String fileExtension = FileParserFactory.getFileExtension(existingResourceRelativePath);
+        for (File existingResourceRelativePath : EXISTING_JSON_RESOURCE_RELATIVE_PATHS) {
+            String fileExtension = FileParserFactory.getFileExtension(existingResourceRelativePath.getPath());
             assertEquals("json", fileExtension);
             FileParser fileParser = FileParserFactory.getFileParser(existingResourceRelativePath);
             assertEquals(FileParser.JSON, fileParser);

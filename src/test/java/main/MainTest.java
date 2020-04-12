@@ -2,14 +2,15 @@ package main;
 
 import org.junit.jupiter.api.*;
 
+import java.io.File;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MainTest {
 
-    public static final String[] EXISTING_CSV_RESOURCE_RELATIVE_PATHS = Main.EXISTING_CSV_RESOURCE_RELATIVE_PATHS;
-    public static final String[] EXISTING_JSON_RESOURCE_RELATIVE_PATHS = Main.EXISTING_JSON_RESOURCE_RELATIVE_PATHS;
-    public static final String[] BAD_RESOURCE_RELATIVE_PATHS = {
-            null,
-            "",
+    public static final File[] EXISTING_CSV_RESOURCE_RELATIVE_PATHS = Main.EXISTING_CSV_RESOURCE_RELATIVE_PATHS;
+    public static final File[] EXISTING_JSON_RESOURCE_RELATIVE_PATHS = Main.EXISTING_JSON_RESOURCE_RELATIVE_PATHS;
+    public static final File[] BAD_RESOURCE_RELATIVE_PATHS = new File[]{
+            new File(""),
     };
 
     @BeforeEach
@@ -52,21 +53,29 @@ public class MainTest {
     @Order(5)
     @DisplayName("Main.main(EXISTING_CSV_RESOURCE_RELATIVE_PATHS)")
     void Main_main_Csv() {
-        Main.main(EXISTING_CSV_RESOURCE_RELATIVE_PATHS);
+        Main.main(getFilePaths(EXISTING_CSV_RESOURCE_RELATIVE_PATHS));
+    }
+
+    private String[] getFilePaths(File[] files) {
+        String[] filePaths = new String[files.length];
+        for(int i = 0; i < files.length; i++) {
+            filePaths[i] = files[i].getPath();
+        }
+        return filePaths;
     }
 
     @Test
     @Order(6)
     @DisplayName("Main.main(EXISTING_JSON_RESOURCE_RELATIVE_PATHS)")
     void Main_main_Json() {
-        Main.main(EXISTING_JSON_RESOURCE_RELATIVE_PATHS);
+        Main.main(getFilePaths(EXISTING_JSON_RESOURCE_RELATIVE_PATHS));
     }
 
     @Test
     @Order(7)
     @DisplayName("Main.main(EXISTING_CSV_RESOURCE_RELATIVE_PATHS ++ EXISTING_JSON_RESOURCE_RELATIVE_PATHS)")
     void Main_main_Csv_and_Json() {
-        String[] existingCombinedResourceRelativePaths = new String[
+        File[] existingCombinedResourceRelativePaths = new File[
                 EXISTING_CSV_RESOURCE_RELATIVE_PATHS.length +
                         EXISTING_JSON_RESOURCE_RELATIVE_PATHS.length +
                         BAD_RESOURCE_RELATIVE_PATHS.length
@@ -77,6 +86,6 @@ public class MainTest {
             if(k < BAD_RESOURCE_RELATIVE_PATHS.length)
                 existingCombinedResourceRelativePaths[EXISTING_CSV_RESOURCE_RELATIVE_PATHS.length + EXISTING_JSON_RESOURCE_RELATIVE_PATHS.length + k] = BAD_RESOURCE_RELATIVE_PATHS[k];
         }
-        Main.main(existingCombinedResourceRelativePaths);
+        Main.main(getFilePaths(existingCombinedResourceRelativePaths));
     }
 }

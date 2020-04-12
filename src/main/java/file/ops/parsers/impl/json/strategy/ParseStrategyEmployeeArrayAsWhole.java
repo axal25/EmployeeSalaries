@@ -9,6 +9,7 @@ import pojo.Employee;
 import pojo.EmployeeArray;
 import pojo.JobAverage;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -17,12 +18,12 @@ import java.util.HashSet;
 public class ParseStrategyEmployeeArrayAsWhole implements IParse {
 
     @Override
-    public HashSet<JobAverage> parse(String fileName) throws ParserImplementationException {
+    public HashSet<JobAverage> parse(File file) throws ParserImplementationException {
         final String functionName = "parse(String fileName)";
-        try (InputStream inputStream = InputStreamOps.getNewInputStream(fileName)) {
+        try (InputStream inputStream = InputStreamOps.getNewInputStream(file)) {
             return actualParsing(inputStream);
         } catch (IOException | BadFileNameException | InputStreamNotOpenException e) {
-            throw new ParserImplementationException(this.getClass().getSimpleName(), functionName, fileName, e);
+            throw new ParserImplementationException(this.getClass().getSimpleName(), functionName, file.getPath(), e);
         }
     }
 

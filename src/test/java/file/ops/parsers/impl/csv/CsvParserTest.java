@@ -5,17 +5,18 @@ import main.Main;
 import org.junit.jupiter.api.*;
 import pojo.JobAverage;
 
+import java.io.File;
 import java.util.HashSet;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CsvParserTest {
-    public static final String[] EXISTING_CSV_RESOURCE_RELATIVE_PATHS = Main.EXISTING_CSV_RESOURCE_RELATIVE_PATHS;
+    public static final File[] EXISTING_CSV_RESOURCE_RELATIVE_PATHS = Main.EXISTING_CSV_RESOURCE_RELATIVE_PATHS;
 
     @Test
     @Order(1)
     @DisplayName("CsvParser Constructor")
     void csvParserConstructor() {
-        for (String existingResourceRelativePath : EXISTING_CSV_RESOURCE_RELATIVE_PATHS) {
+        for (File existingResourceRelativePath : EXISTING_CSV_RESOURCE_RELATIVE_PATHS) {
             CsvParser csvParser = new CsvParser(existingResourceRelativePath);
         }
     }
@@ -24,7 +25,7 @@ public class CsvParserTest {
     @Order(2)
     @DisplayName("CsvParser ParseImpl")
     void csvParserParseImpl() throws ParserImplementationException {
-        for (String existingResourceRelativePath : EXISTING_CSV_RESOURCE_RELATIVE_PATHS) {
+        for (File existingResourceRelativePath : EXISTING_CSV_RESOURCE_RELATIVE_PATHS) {
             CsvParser csvParser = new CsvParser(existingResourceRelativePath);
             HashSet<JobAverage> jobAverages = csvParser.parseImpl();
             System.out.println(existingResourceRelativePath);

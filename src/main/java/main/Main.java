@@ -12,37 +12,45 @@ import java.util.HashSet;
 
 public class Main {
 
-    public static final String[] EXISTING_CSV_RESOURCE_RELATIVE_PATHS = {
-            new StringBuilder().append(File.separator).append("csv").append(File.separator).append("employees.csv").toString(),
-            new StringBuilder().append(File.separator).append("csv").append(File.separator).append("employees with spaces.csv").toString(),
-            new StringBuilder().append(File.separator).append("test directory with spaces").append(File.separator).append("employees.csv").toString(),
-            new StringBuilder().append(File.separator).append("test directory with spaces").append(File.separator).append("employees with spaces.csv").toString(),
-            new StringBuilder().append(File.separator).append("csv").append(File.separator).append("employees with 3 same job titles or more.csv").toString(),
-            new StringBuilder().append(File.separator).append("test directory with spaces").append(File.separator).append("employees with 3 same job titles or more.csv").toString(),
+    public static final File EXISTING_CSV_RESOURCE_DIRECTORY_RELATIVE_PATHS = new File(File.separator + "csv");
+    public static final File EXISTING_JSON_RESOURCE_DIRECTORY_RELATIVE_PATHS = new File(File.separator + "json");
+    public static final File EXISTING_TEST_RESOURCE_DIRECTORY_RELATIVE_PATHS = new File(File.separator + "test directory with spaces");
+
+    public static final File[] EXISTING_CSV_RESOURCE_RELATIVE_PATHS = {
+            new File(EXISTING_CSV_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees.csv"),
+            new File(EXISTING_CSV_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees with spaces.csv"),
+            new File(EXISTING_TEST_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees.csv"),
+            new File(EXISTING_TEST_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees with spaces.csv"),
+            new File(EXISTING_CSV_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees with 3 same job titles or more.csv"),
+            new File(EXISTING_TEST_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees with 3 same job titles or more.csv"),
     };
 
-    public static final String[] EXISTING_JSON_RESOURCE_RELATIVE_PATHS = {
-            new StringBuilder().append(File.separator).append("json").append(File.separator).append("employees.json").toString(),
-            new StringBuilder().append(File.separator).append("json").append(File.separator).append("employees with spaces.json").toString(),
-            new StringBuilder().append(File.separator).append("test directory with spaces").append(File.separator).append("employees.json").toString(),
-            new StringBuilder().append(File.separator).append("test directory with spaces").append(File.separator).append("employees with spaces.json").toString(),
-            new StringBuilder().append(File.separator).append("json").append(File.separator).append("employees with 3 same job titles or more.json").toString(),
-            new StringBuilder().append(File.separator).append("test directory with spaces").append(File.separator).append("employees with 3 same job titles or more.json").toString(),
+    public static final File[] EXISTING_JSON_RESOURCE_RELATIVE_PATHS = new File[]{
+            new File(EXISTING_JSON_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees.json"),
+            new File(EXISTING_JSON_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees with spaces.json"),
+            new File(EXISTING_TEST_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees.json"),
+            new File(EXISTING_TEST_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees with spaces.json"),
+            new File(EXISTING_JSON_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees with 3 same job titles or more.json"),
+            new File(EXISTING_TEST_RESOURCE_DIRECTORY_RELATIVE_PATHS, "employees with 3 same job titles or more.json"),
     };
-    public static final int DIFFERENT_CONTENTS_INDEX = 4;
+
+    public static final int DIFFERENT_CONTENTS_INDEX = 4; // At which index files have different contents
 
     public static void main(String[] args) {
         System.out.println(getOutputMessage(args));
     }
 
     public static String getOutputMessage(String[] filePaths) {
+        final String functionName = "getOutputMessage(String[] filePaths)";
         StringBuilder outputMessage = new StringBuilder();
         if(filePaths != null && filePaths.length > 0) {
             for (String filePath : filePaths) {
                 outputMessage.append("\n\rFile: ").append(filePath).append("\n\r");
                 try {
-                    FileParser fileParser = FileParserFactory.getFileParser(filePath);
-                    HashSet<JobAverage> jobAverages = fileParser.parse(filePath);
+                    if(filePath == null) throw new BadFileNameException(Main.class.getSimpleName(), functionName, filePath, null);
+                    File file = new File(filePath);
+                    FileParser fileParser = FileParserFactory.getFileParser(file);
+                    HashSet<JobAverage> jobAverages = fileParser.parse(file);
                     outputMessage.append(getOutputMessage(jobAverages));
                 } catch(BadFileExtensionException | BadFileNameException | ParserImplementationException e) {
                     outputMessage.append(e.getMessage()).append("\n\r");
@@ -51,8 +59,8 @@ public class Main {
         }
         else {
             outputMessage.append("None filePaths were given. You need to pass path to the source file. For example: [\n\r");
-            for(String existingResourceRelativePath : EXISTING_CSV_RESOURCE_RELATIVE_PATHS) {
-                outputMessage.append("\t").append(existingResourceRelativePath).append(",\n\r");
+            for(File existingResourceRelativePath : EXISTING_CSV_RESOURCE_RELATIVE_PATHS) {
+                outputMessage.append("\t\"").append(existingResourceRelativePath.getPath()).append("\",\n\r");
             }
             outputMessage.append("]\n\rOr if the source file is in the same directory as jar just the file name.");
         }

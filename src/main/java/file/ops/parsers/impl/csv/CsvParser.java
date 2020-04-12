@@ -8,6 +8,7 @@ import file.ops.parsers.impl.exceptions.BadLineParseArraySizeException;
 import pojo.Employee;
 import pojo.JobAverage;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashSet;
@@ -20,18 +21,18 @@ public class CsvParser extends AbstractParser {
         super();
     }
 
-    public CsvParser(String fileName) {
-        super(fileName);
+    public CsvParser(File file) {
+        super(file);
     }
 
     @Override
     public HashSet<JobAverage> parseImpl() throws ParserImplementationException {
         final String functionName = "parseImpl()";
-        try (DoubleScanner doubleScanner = new DoubleScanner(super.getFileName())) {
+        try (DoubleScanner doubleScanner = new DoubleScanner(super.getFile())) {
             doubleScanner.useDelimiter(";");
             return actualParsing(doubleScanner);
         } catch (IOException | DoubleScannerClosedException | BadFileNameException | DoubleScannerNullDelimiterException | ParseException | BadLineParseArraySizeException | InputStreamNotOpenException e) {
-            throw new ParserImplementationException(this.getClass().getSimpleName(), functionName, super.getFileName(), e);
+            throw new ParserImplementationException(this.getClass().getSimpleName(), functionName, super.getFile().getPath(), e);
         }
     }
 
