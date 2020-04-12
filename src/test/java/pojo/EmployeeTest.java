@@ -1,5 +1,6 @@
 package pojo;
 
+import main.MainTest;
 import org.junit.jupiter.api.*;
 
 import java.text.ParseException;
@@ -26,7 +27,7 @@ public class EmployeeTest {
                     employeeData[3],
                     employeeData[4]
             );
-            System.out.println(employee);
+            if(MainTest.DO_PRINT_TEST_DATA_TO_SYSTEM_OUT) System.out.println(employee);
         }
     }
 }

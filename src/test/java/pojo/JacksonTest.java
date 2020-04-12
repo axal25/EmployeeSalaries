@@ -2,6 +2,7 @@ package pojo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import main.MainTest;
 import org.junit.jupiter.api.*;
 import pojo.Employee;
 
@@ -43,9 +44,9 @@ public class JacksonTest {
                     EMPLOYEES[i][3],
                     EMPLOYEES[i][4]
             );
-            System.out.println(employee);
+            if(MainTest.DO_PRINT_TEST_DATA_TO_SYSTEM_OUT) System.out.println(employee);
             String employeeString = objectMapper.writeValueAsString(employee);
-            System.out.println(employeeString);
+            if(MainTest.DO_PRINT_TEST_DATA_TO_SYSTEM_OUT) System.out.println(employeeString);
             employee = objectMapper.readValue(employeeString, Employee.class);
         }
     }

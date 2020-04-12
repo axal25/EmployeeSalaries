@@ -12,6 +12,7 @@ public class MainTest {
     public static final File[] BAD_RESOURCE_RELATIVE_PATHS = new File[]{
             new File(""),
     };
+    public static final boolean DO_PRINT_TEST_DATA_TO_SYSTEM_OUT = false;
 
     @BeforeEach
     void setUp() {
