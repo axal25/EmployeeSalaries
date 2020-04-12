@@ -25,9 +25,9 @@ public class JacksonTest {
                     employeeData[3],
                     employeeData[4]
             );
-            System.out.println(employee);
+            if(MainTest.DO_PRINT_TEST_DATA_TO_SYSTEM_OUT) System.out.println(employee);
             String employeeString = objectMapper.writeValueAsString(employee);
-            System.out.println(employeeString);
+            if(MainTest.DO_PRINT_TEST_DATA_TO_SYSTEM_OUT) System.out.println(employeeString);
         }
     }
 
