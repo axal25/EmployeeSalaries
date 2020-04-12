@@ -21,9 +21,17 @@ public class InputStreamOps {
             return inputStream;
         } catch(InputStreamNullException e) {
             try {
-                return new FileInputStream(file);
+                InputStream inputStream = new FileInputStream(file);
+                return inputStream;
             } catch (IOException | SecurityException ex) {
-                throw new InputStreamNotOpenException(InputStreamOps.class.getSimpleName(), functionName, file.getPath(), e, ex);
+                try {
+                    InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(file.getPath());
+                    if (inputStream == null)
+                        throw new InputStreamNullException(InputStreamOps.class.getSimpleName(), functionName, file.getPath());
+                    return inputStream;
+                } catch (InputStreamNullException exe) {
+                    throw new InputStreamNotOpenException(InputStreamOps.class.getSimpleName(), functionName, file.getPath(), e, ex, exe);
+                }
             }
         }
     }
