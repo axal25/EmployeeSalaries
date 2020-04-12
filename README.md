@@ -1,2 +1,2 @@
-# EmployeesSalaries
-EmployeesSalaries projects reads CSV and JSON data and returns sum for each job title
+# EmployeeSalaries
+EmployeeSalaries project reads CSV and JSON data and returns sum for each job title
